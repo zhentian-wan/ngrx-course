@@ -56,6 +56,10 @@ const routes: Routes = [
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production
+    }),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: "router",
+      routerState: RouterState.Minimal
     })
   ],
   providers: [AuthGuard],
