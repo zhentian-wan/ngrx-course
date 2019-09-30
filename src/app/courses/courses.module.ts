@@ -31,6 +31,8 @@ import { CoursesEffects } from "./courses.effects";
 import { compareLessons, Lesson } from "./model/lesson";
 import { CoursesResolver } from "./courses.resolver";
 import { EffectsModule } from "@ngrx/effects";
+import { StoreModule } from "@ngrx/store";
+import { coursesReducer } from "./reducers/courses.reducers";
 
 export const coursesRoutes: Routes = [
   {
@@ -65,6 +67,7 @@ export const coursesRoutes: Routes = [
     MatMomentDateModule,
     ReactiveFormsModule,
     RouterModule.forChild(coursesRoutes),
+    StoreModule.forFeature("courses", [coursesReducer]),
     EffectsModule.forFeature([CoursesEffects])
   ],
   declarations: [

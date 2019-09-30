@@ -14,10 +14,9 @@ export class CoursesEffects {
 
   loadAllCourses$ = createEffect(() =>
     this.action$.pipe(
-      tap(() => console.log("effect")),
       ofType(CoursesAction.loadAllCourse),
       concatMap(() => this.coursesHttpService.findAllCourses()),
-      map(courses => CoursesAction.allCoursesLoaded(courses))
+      map(courses => CoursesAction.allCoursesLoaded({ courses }))
     )
   );
 }
