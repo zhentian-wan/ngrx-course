@@ -67,7 +67,7 @@ export const coursesRoutes: Routes = [
     MatMomentDateModule,
     ReactiveFormsModule,
     RouterModule.forChild(coursesRoutes),
-    StoreModule.forFeature("courses", [coursesReducer]),
+    StoreModule.forFeature("courses", coursesReducer),
     EffectsModule.forFeature([CoursesEffects])
   ],
   declarations: [

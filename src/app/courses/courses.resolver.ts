@@ -9,6 +9,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
 import { CoursesAction } from "./actions-types";
 import { tap, first, finalize } from "rxjs/operators";
+import { adapter } from "./reducers/courses.reducers";
 
 @Injectable()
 export class CoursesResolver implements Resolve<any> {

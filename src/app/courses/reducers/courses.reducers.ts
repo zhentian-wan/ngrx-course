@@ -8,15 +8,21 @@ export interface CoursesState {
   ids: number[];
 }*/
 
-export interface CoursesState extends EntityState<Course> {}
+export interface CoursesState extends EntityState<Course> {
+  allCoursesLoaded: boolean;
+}
 
 export const adapter = createEntityAdapter<Course>();
 
-export const initCoursesState = adapter.getInitialState();
+export const initCoursesState = adapter.getInitialState({
+  allCoursesLoaded: false
+});
 
 export const coursesReducer = createReducer(
   initCoursesState,
   on(CoursesAction.allCoursesLoaded, (state, action) =>
-    adapter.addAll(action.courses, state)
+    adapter.addAll(action.courses, { ...state, allCoursesLoaded: true })
   )
 );
+
+export const { selectAll } = adapter.getSelectors();
