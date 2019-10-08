@@ -1,16 +1,16 @@
 import { createSelector, createFeatureSelector } from "@ngrx/store";
-import * as fronCourses from "./reducers/courses.reducers";
+import * as fromCourses from "./reducers/courses.reducers";
 
 export const selectCoursesState = createFeatureSelector<
-  fronCourses.CoursesState
+  fromCourses.CoursesState
 >("courses");
 
 export const selectAllCourses = createSelector(
   selectCoursesState,
-  fronCourses.selectAll
+  fromCourses.selectAll
 );
 
-export const selectIsLoading = createSelector(
+export const selectAllCoursesLoaded = createSelector(
   selectCoursesState,
   state => state.allCoursesLoaded
 );
