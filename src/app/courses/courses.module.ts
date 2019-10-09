@@ -4,6 +4,7 @@ import { HomeComponent } from "./home/home.component";
 import { CoursesCardListComponent } from "./courses-card-list/courses-card-list.component";
 import { EditCourseDialogComponent } from "./edit-course-dialog/edit-course-dialog.component";
 import { CoursesHttpService } from "./services/courses-http.service";
+import { CourseEntityService } from "./services/course-entity.service";
 import { CourseComponent } from "./course/course.component";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -29,7 +30,8 @@ import {
 import { compareCourses, Course } from "./model/course";
 import { CoursesEffects } from "./courses.effects";
 import { compareLessons, Lesson } from "./model/lesson";
-import { CoursesResolver } from "./courses.resolver";
+import { CoursesResolver } from "./services/course-resolver";
+import { CoursesDataService } from "./services/courses-data.service";
 import { EffectsModule } from "@ngrx/effects";
 import { StoreModule } from "@ngrx/store";
 import { coursesReducer } from "./reducers/courses.reducers";
@@ -44,9 +46,16 @@ export const coursesRoutes: Routes = [
   },
   {
     path: ":courseUrl",
-    component: CourseComponent
+    component: CourseComponent,
+    resolve: {
+      courses: CoursesResolver
+    }
   }
 ];
+
+const entityMetadata: EntityMetadataMap = {
+  Course: {}
+};
 
 @NgModule({
   imports: [
@@ -66,9 +75,9 @@ export const coursesRoutes: Routes = [
     MatDatepickerModule,
     MatMomentDateModule,
     ReactiveFormsModule,
-    RouterModule.forChild(coursesRoutes),
-    StoreModule.forFeature("courses", coursesReducer),
-    EffectsModule.forFeature([CoursesEffects])
+    RouterModule.forChild(coursesRoutes)
+    //StoreModule.forFeature("courses", coursesReducer)
+    //EffectsModule.forFeature([CoursesEffects])
   ],
   declarations: [
     HomeComponent,
@@ -83,8 +92,21 @@ export const coursesRoutes: Routes = [
     CourseComponent
   ],
   entryComponents: [EditCourseDialogComponent],
-  providers: [CoursesHttpService, CoursesResolver]
+  providers: [
+    CoursesHttpService,
+    CoursesDataService,
+    CourseEntityService,
+    CoursesResolver
+  ]
 })
 export class CoursesModule {
-  constructor() {}
+  constructor(
+    private eds: EntityDefinitionService,
+    private entityDataService: EntityDataService,
+    private courseDataService: CoursesDataService
+  ) {
+    eds.registerMetadataMap(entityMetadata);
+
+    entityDataService.registerService("Course", courseDataService);
+  }
 }

@@ -52,6 +52,7 @@ const routes: Routes = [
     MatListModule,
     MatToolbarModule,
     AuthModule.forRoot(),
+    EntityDataModule.forRoot({}),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
