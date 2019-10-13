@@ -6,7 +6,9 @@ import { EditCourseDialogComponent } from "../edit-course-dialog/edit-course-dia
 import { MatDialog } from "@angular/material";
 import { Store, select } from "@ngrx/store";
 import { AppState } from "../../reducers";
+import { map } from "rxjs/operators";
 import * as coursesSelector from "../courses.selectors";
+import { CourseEntityService } from "../services/course-entity.service";
 
 @Component({
   selector: "home",
@@ -20,23 +22,26 @@ export class HomeComponent implements OnInit {
 
   advancedCourses$: Observable<Course[]>;
 
-  constructor(private dialog: MatDialog, private store: Store<AppState>) {}
+  constructor(
+    private dialog: MatDialog,
+    private courseService: CourseEntityService
+  ) {}
 
   ngOnInit() {
     this.reload();
   }
 
   reload() {
-    this.beginnerCourses$ = this.store.pipe(
-      select(coursesSelector.selectBeginnerCourses)
+    this.beginnerCourses$ = this.courseService.entities$.pipe(
+      map(courses => courses.filter(c => c.category === "BEGINNER"))
     );
 
-    this.advancedCourses$ = this.store.pipe(
-      select(coursesSelector.selectAdvancedCourses)
+    this.advancedCourses$ = this.courseService.entities$.pipe(
+      map(courses => courses.filter(c => c.category === "ADVANCED"))
     );
 
-    this.promoTotal$ = this.store.pipe(
-      select(coursesSelector.selectPromoTotal)
+    this.promoTotal$ = this.courseService.entities$.pipe(
+      map(courses => courses.filter(c => c.promo).length)
     );
   }
 
