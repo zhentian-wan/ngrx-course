@@ -5,6 +5,7 @@ import { CoursesCardListComponent } from "./courses-card-list/courses-card-list.
 import { EditCourseDialogComponent } from "./edit-course-dialog/edit-course-dialog.component";
 import { CoursesHttpService } from "./services/courses-http.service";
 import { CourseEntityService } from "./services/course-entity.service";
+import { LessonEntityService } from "./services/lesson-entity.service";
 import { CourseComponent } from "./course/course.component";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -28,13 +29,9 @@ import {
   EntityMetadataMap
 } from "@ngrx/data";
 import { compareCourses, Course } from "./model/course";
-import { CoursesEffects } from "./courses.effects";
 import { compareLessons, Lesson } from "./model/lesson";
 import { CoursesResolver } from "./services/course-resolver";
 import { CoursesDataService } from "./services/courses-data.service";
-import { EffectsModule } from "@ngrx/effects";
-import { StoreModule } from "@ngrx/store";
-import { coursesReducer } from "./reducers/courses.reducers";
 
 export const coursesRoutes: Routes = [
   {
@@ -56,6 +53,12 @@ export const coursesRoutes: Routes = [
 const entityMetadata: EntityMetadataMap = {
   Course: {
     sortComparer: compareCourses,
+    entityDispatcherOptions: {
+      optimisticUpdate: true
+    }
+  },
+  Lesson: {
+    sortComparer: compareLessons,
     entityDispatcherOptions: {
       optimisticUpdate: true
     }
@@ -81,8 +84,6 @@ const entityMetadata: EntityMetadataMap = {
     MatMomentDateModule,
     ReactiveFormsModule,
     RouterModule.forChild(coursesRoutes)
-    //StoreModule.forFeature("courses", coursesReducer)
-    //EffectsModule.forFeature([CoursesEffects])
   ],
   declarations: [
     HomeComponent,
@@ -101,6 +102,7 @@ const entityMetadata: EntityMetadataMap = {
     CoursesHttpService,
     CoursesDataService,
     CourseEntityService,
+    LessonEntityService,
     CoursesResolver
   ]
 })

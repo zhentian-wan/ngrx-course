@@ -13,7 +13,10 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
+import { of } from "rxjs";
 import { CoursesHttpService } from "../services/courses-http.service";
+import { CourseEntityService } from "../services/course-entity.service";
+import { LessonEntityService } from "../services/lesson-entity.service";
 
 @Component({
   selector: "course",
@@ -30,19 +33,19 @@ export class CourseComponent implements OnInit {
   nextPage = 0;
 
   constructor(
-    private coursesService: CoursesHttpService,
+    private coursesService: CourseEntityService,
+    private lessonsService: LessonEntityService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     const courseUrl = this.route.snapshot.paramMap.get("courseUrl");
 
-    this.course$ = this.coursesService.findCourseByUrl(courseUrl);
-
-    this.lessons$ = this.course$.pipe(
-      concatMap(course => this.coursesService.findLessons(course.id)),
-      tap(console.log)
+    this.course$ = this.coursesService.entities$.pipe(
+      map(courses => courses.find(c => c.url === courseUrl))
     );
+
+    this.lessons$ = of([]);
   }
 
   loadLessonsPage(course: Course) {}
